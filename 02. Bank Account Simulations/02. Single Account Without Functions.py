@@ -1,16 +1,12 @@
-# Any number of accounts - using lists Version
+# Any number of accounts - using dictionaries Version
 # With functions
-
-accounts_usernames = []
-accounts_passwords = []
-accounts_balances = []
+accounts = []
 
 
 def create_an_account(username, password, balance):
-    global accounts_usernames, accounts_passwords, accounts_balances
-    accounts_usernames.append(username)
-    accounts_passwords.append(password)
-    accounts_balances.append(balance)
+    global accounts
+    new_acc = {'username': username, 'password': password, 'balance': balance}
+    accounts.append(new_acc)
 
 
 def actions_info():
@@ -24,55 +20,58 @@ def actions_info():
 
 
 def get_balance(account_number, password):
-    global accounts_usernames, accounts_passwords, accounts_balances
-    if password == accounts_passwords[account_number]:
-        return f"{accounts_usernames[account_number]}'s balance is {accounts_balances[account_number]}$"
+    global accounts
+    current_account = accounts[account_number]
+    if password == current_account['password']:
+        return f"{current_account['username']}'s balance is {current_account['balance']}$"
     else:
         return "Incorrect password!"
 
 
 def deposit(account_number, amount, password):
-    global accounts_usernames, accounts_passwords, accounts_balances
+    global accounts
+    current_account = accounts[account_number]
 
-    if password == accounts_passwords[account_number]:
+    if password == current_account['password']:
         if amount < 0:
             print("You cannot deposit a negative amount")
         else:
-            accounts_balances[account_number] += amount
-            print(f"{accounts_usernames[account_number]}, your new balance is: {accounts_balances[account_number]}$")
+            current_account['balance'] += amount
+            print(f"{current_account['username']}, your new balance is: {current_account['balance']}$")
     else:
         print("Incorrect password!")
 
 
 def withdraw(account_number, amount, password):
-    global accounts_usernames, accounts_passwords, accounts_balances
-    if account_number == 0:
-        if password == accounts_passwords[account_number]:
-            if accounts_balances[account_number] < amount:
-                print("You can not withdraw more than you have in your account")
-            elif amount < 0:
-                print("You cannot withdraw a negative amount")
-            else:
-                accounts_balances[account_number] -= amount
-                print(f"{accounts_usernames[account_number]} successfully withdrew {amount} dollars from your account.")
-                print(f"Your current balance is {accounts_balances[account_number]}$")
+    global accounts
+    current_account = accounts[account_number]
+
+    if password == current_account['password']:
+        if current_account['balance'] < amount:
+            print("You can not withdraw more than you have in your account")
+        elif amount < 0:
+            print("You cannot withdraw a negative amount")
         else:
-            print("Incorrect password!")
+            current_account['balance'] -= amount
+            print(f"{current_account['username']}, you successfully withdrew {amount} dollars from your account.")
+            print(f"Your current balance is {current_account['balance']}$")
+    else:
+        print("Incorrect password!")
 
 
 def show(account_number):
-
+    global accounts
+    current_account = accounts[account_number]
     print("Account information:")
-    print(f"         Username: {accounts_usernames[account_number]}")
-    print(f"         Password: {accounts_passwords[account_number]}")
-    print(f"         Balance: {accounts_balances[account_number]}")
+    print(f"         Username: {current_account['username']}")
+    print(f"         Password: {current_account['password']}")
+    print(f"         Balance: {current_account['balance']}")
     print()
 
 
-print(f"Peter's account number is {len(accounts_usernames)}")  # 0
+# Two sample accounts
 create_an_account("Peter", "P123!", 500)
 
-print(f"Peter's account number is {len(accounts_usernames)}")  # 1
 create_an_account("Mark", "M123", 300)
 
 while True:
