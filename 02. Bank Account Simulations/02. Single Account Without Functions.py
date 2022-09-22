@@ -1,25 +1,16 @@
-# Two Accounts Version
+# Any number of accounts - using lists Version
 # With functions
 
+accounts_usernames = []
+accounts_passwords = []
+accounts_balances = []
 
-account0username = ''
-account0password = ''
-account0balance = 0
-account1username = ''
-account1password = ''
-account1balance = 0
 
-def create_an_account(account_number, username, password, balance):
-    global account0username, account0password, account0balance
-    global account1username, account1password, account1balance
-    if account_number == 0:
-        account0username = username
-        account0password = password
-        account0balance = balance
-    else:
-        account1username = username
-        account1password = password
-        account1balance = balance
+def create_an_account(username, password, balance):
+    global accounts_usernames, accounts_passwords, accounts_balances
+    accounts_usernames.append(username)
+    accounts_passwords.append(password)
+    accounts_balances.append(balance)
 
 
 def actions_info():
@@ -33,87 +24,56 @@ def actions_info():
 
 
 def get_balance(account_number, password):
-    global account0username, account0password, account0balance
-    global account1username, account1password, account1balance
-    if account_number == 0:
-        if password == account0password:
-            return f"{account0username}'s balance is {account0balance}$"
-        else:
-            return "Incorrect password!"
+    global accounts_usernames, accounts_passwords, accounts_balances
+    if password == accounts_passwords[account_number]:
+        return f"{accounts_usernames[account_number]}'s balance is {accounts_balances[account_number]}$"
     else:
-        if password == account1password:
-            return f"{account1username}'s balance is {account1balance}$"
-        else:
-            return "Incorrect password!"
+        return "Incorrect password!"
+
 
 def deposit(account_number, amount, password):
-    global account0username, account0password, account0balance
-    global account1username, account1password, account1balance
-    if account_number == 0:
-        if password == account0password:
-            if amount < 0:
-                print("You cannot deposit a negative amount")
-            else:
-                account0balance += amount
-                print(f"{account0username}, your new balance is: {account0balance}$")
+    global accounts_usernames, accounts_passwords, accounts_balances
+
+    if password == accounts_passwords[account_number]:
+        if amount < 0:
+            print("You cannot deposit a negative amount")
         else:
-            print("Incorrect password!")
+            accounts_balances[account_number] += amount
+            print(f"{accounts_usernames[account_number]}, your new balance is: {accounts_balances[account_number]}$")
     else:
-        if password == account1password:
-            if amount < 0:
-                print("You cannot deposit a negative amount")
-            else:
-                account1balance += amount
-                print(f"{account1username}, your new balance is: {account1balance}$")
-        else:
-            print("Incorrect password!")
+        print("Incorrect password!")
 
 
 def withdraw(account_number, amount, password):
-    global account0username, account0password, account0balance
-    global account1username, account1password, account1balance
+    global accounts_usernames, accounts_passwords, accounts_balances
     if account_number == 0:
-        if password == account0password:
-            if account0balance < amount:
+        if password == accounts_passwords[account_number]:
+            if accounts_balances[account_number] < amount:
                 print("You can not withdraw more than you have in your account")
             elif amount < 0:
                 print("You cannot withdraw a negative amount")
             else:
-                account0balance -= amount
-                print(f"{account0username} successfully withdrew {amount} dollars from your account.")
-                print(f"Your current balance is {account0balance}$")
-        else:
-            print("Incorrect password!")
-    else:
-        if password == account1password:
-            if account1balance < amount:
-                print("You can not withdraw more than you have in your account")
-            elif amount < 0:
-                print("You cannot withdraw a negative amount")
-            else:
-                account1balance -= amount
-                print(f"{account1username} successfully withdrew {amount} dollars from your account.")
-                print(f"Your current balance is {account1balance}$")
+                accounts_balances[account_number] -= amount
+                print(f"{accounts_usernames[account_number]} successfully withdrew {amount} dollars from your account.")
+                print(f"Your current balance is {accounts_balances[account_number]}$")
         else:
             print("Incorrect password!")
 
 
 def show(account_number):
-    if account_number == 0:
-        print("Account information:")
-        print(f"         Username: {account0username}")
-        print(f"         Password: {account0password}")
-        print(f"         Balance: {account0balance}")
-        print()
-    else:
-        print("Account information:")
-        print(f"         Username: {account1username}")
-        print(f"         Password: {account1password}")
-        print(f"         Balance: {account1balance}")
-        print()
 
-create_an_account(0,"Peter", "P123!", 500)
-create_an_account(1, "Mark", "M123", 300)
+    print("Account information:")
+    print(f"         Username: {accounts_usernames[account_number]}")
+    print(f"         Password: {accounts_passwords[account_number]}")
+    print(f"         Balance: {accounts_balances[account_number]}")
+    print()
+
+
+print(f"Peter's account number is {len(accounts_usernames)}")  # 0
+create_an_account("Peter", "P123!", 500)
+
+print(f"Peter's account number is {len(accounts_usernames)}")  # 1
+create_an_account("Mark", "M123", 300)
 
 while True:
     actions_info()
@@ -146,5 +106,6 @@ while True:
     elif choice == "s":
         account_number = int(input("Enter the account you want to login to (0/1): "))
         show(account_number)
+
     elif choice == "q":
         break
