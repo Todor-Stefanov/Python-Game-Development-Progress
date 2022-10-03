@@ -1,40 +1,40 @@
+class AbortTransaction(Exception):
+    ''' raise this exception to abort a bank transaction '''
+    pass
+
 class Account():
     def __init__(self, username, password, balance):
         self.username = username
         self.password = password
-        self.balance = balance
+        self.balance = self.validate_amount(balance)
 
-    def get_balance(self, password):
-        if password == self.password:
-            if self.balance > 0:
-                return self.balance
-            else:
-                return None
-        else:
-            return "Incorrect password!"
+    def validate_amount(self, balance):
+        try:
+            balance = int(balance)
+        except ValueError:
+            raise AbortTransaction("Balance must be an integer")
+        if balance < 0:
+            raise AbortTransaction("Balance must be positive")
+        return balance
 
-    def deposit(self, password, amount):
-        if password == self.password:
-            if amount < 0:
-                print("You cannot deposit a negative amount")
-            else:
-                self.balance += amount
-                print(f"{self.username}, your new balance is: {self.balance}$")
-        else:
-            print("Incorrect password!")
+    def check_pass(self, password):
+        if password != self.password:
+            raise AbortTransaction("Incorrect password for this account")
 
-    def withdraw(self, password, amount):
-        if password == self.password:
-            if self.balance < amount:
-                print("You can not withdraw more than you have in your account")
-            elif amount < 0:
-                print("You cannot withdraw a negative amount")
-            else:
-                self.balance -= amount
-                print(f"{self.username}, you successfully withdrew {amount} dollars from your account.")
-                print(f"Your current balance is {self.balance}$")
-        else:
-            print("Incorrect password!")
+    def get_balance(self):
+        return self.balance
+
+    def deposit(self, amount):
+        amount_to_deposit = self.validate_amount(amount)
+        self.balance += amount_to_deposit
+        return self.balance
+
+    def withdraw(self, amount):
+        amount_to_withdraw = self.validate_amount(amount)
+        if amount_to_withdraw > self.balance:
+            raise AbortTransaction("You cannot withdraw more than you have in your account")
+        self.balance -= amount_to_withdraw
+        return self.balance
 
     def show(self):
         print("Account information:")
