@@ -42,8 +42,8 @@ platform_y = 460
 platform_rect = pygame.Rect(platform_x, platform_y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 collision = False
-# 6. Endless loop
 
+# 6. Endless loop
 while True:
 
     # 7. Check for and handle events
@@ -54,7 +54,7 @@ while True:
             pygame.quit()
             sys.exit()
 
-        # See if user pressed a key
+    # See if user pressed a key
     key_pressed_tuple = pygame.key.get_pressed()
 
     if key_pressed_tuple[pygame.K_LEFT]:
@@ -70,7 +70,8 @@ while True:
         collision = True
     elif ball_y == 0:
         collision = False
-
+        
+    # If collision with the platform has occured the ball changes its diretion of moving
     if collision:
         ball_y -= N_PIXELS_TO_MOVE
     else:
