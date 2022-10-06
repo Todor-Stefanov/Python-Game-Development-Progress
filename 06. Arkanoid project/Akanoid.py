@@ -20,7 +20,7 @@ PLATFORM_WIDTH = 60
 PLATFORM_HEIGHT = 20
 PLATFORM_MAX_WIDTH = WINDOW_WIDTH - PLATFORM_WIDTH
 PLATFORM_MAX_HEIGHT = WINDOW_HEIGHT - PLATFORM_HEIGHT
-N_PIXELS_TO_MOVE = 3
+N_PIXELS_TO_MOVE = 5
 
 # 3. Initialize the world
 pygame.init()
@@ -41,6 +41,7 @@ platform_x = 320
 platform_y = 460
 platform_rect = pygame.Rect(platform_x, platform_y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
+collision = False
 # 6. Endless loop
 
 while True:
@@ -54,20 +55,27 @@ while True:
             sys.exit()
 
         # See if user pressed a key
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                platform_x -= N_PIXELS_TO_MOVE
-            elif event.key == pygame.K_RIGHT:
-                platform_x += N_PIXELS_TO_MOVE
+    key_pressed_tuple = pygame.key.get_pressed()
+
+    if key_pressed_tuple[pygame.K_LEFT]:
+        platform_x -= N_PIXELS_TO_MOVE
+    if key_pressed_tuple[pygame.K_RIGHT]:
+        platform_x += N_PIXELS_TO_MOVE
 
     # 8. Do any "per frame" actions
     platform_rect = pygame.Rect(platform_x, platform_y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
-    ball_y += N_PIXELS_TO_MOVE
-    ball_rect = pygame.Rect(ball_x, ball_y, BALL_WIDTH_HEIGHT, BALL_WIDTH_HEIGHT)
     # Check if the ball is colliding with the platform
     if ball_rect.colliderect(platform_rect):
-        print("Ball is touching the platform")
+        collision = True
+    elif ball_y == 0:
+        collision = False
+
+    if collision:
+        ball_y -= N_PIXELS_TO_MOVE
+    else:
+        ball_y += N_PIXELS_TO_MOVE
+    ball_rect = pygame.Rect(ball_x, ball_y, BALL_WIDTH_HEIGHT, BALL_WIDTH_HEIGHT)
 
     # 9. Clear the window
     window.fill(BLACK)
